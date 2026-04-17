@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViewMoney — Assista e Ganhe</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070f;
+  --bg2: #0e0e1c;
+  --bg3: #13132a;
+  --card: #111127;
+  --card2: #181836;
+  --border: rgba(120,100,255,0.15);
+  --border2: rgba(120,100,255,0.3);
+  --accent: #7c5af0;
+  --accent2: #a07fff;
+  --accent3: #5b3bd4;
+  --gold: #f0c040;
+  --gold2: #ffd97a;
+  --green: #22d487;
+  --green2: #0fa860;
+  --red: #f04060;
+  --text: #eaeaf7;
+  --text2: #9898c0;
+  --text3: #5a5a88;
+  --r: 12px;
+  --r2: 18px;
+  --r3: 24px;
+  --shadow: 0 8px 40px rgba(0,0,0,0.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:'DM Sans',sans-serif}
+input,select,textarea{font-family:'DM Sans',sans-serif}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent3);border-radius:4px}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ── NAVBAR ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,7,15,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800}
+.nav-logo .dot{width:10px;height:10px;background:var(--accent);border-radius:50%;box-shadow:0 0 12px var(--accent)}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-size:.9rem;color:var(--text2);transition:.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-actions{display:flex;gap:.75rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:.55rem 1.25rem;border-radius:var(--r);border:none;font-size:.9rem;font-weight:500;transition:all .2s;white-space:nowrap}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-ghost:hover{background:var(--card);border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-sm{padding:.4rem .9rem;font-size:.82rem}
+.btn-danger{background:var(--red);color:#fff}
+.btn-success{background:var(--green2);color:#fff}
+.btn-gold{background:var(--gold);color:#1a1400;font-weight:600}
+.btn-gold:hover{background:var(--gold2)}
+.btn-lg{padding:.8rem 2rem;font-size:1rem}
+.btn-xl{padding:1rem 2.5rem;font-size:1.1rem;border-radius:var(--r2)}
+.btn-block{width:100%}
+
+/* ── LANDING ── */
+#page-home{background:var(--bg)}
+.hero{padding:120px 2rem 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 800px 400px at 50% 0,rgba(124,90,240,.18),transparent)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:.35rem 1rem;background:rgba(124,90,240,.15);border:1px solid var(--border2);border-radius:999px;font-size:.8rem;color:var(--accent2);margin-bottom:2rem}
+.hero-badge .pulse{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero h1{font-size:clamp(2.2rem,6vw,4.2rem);font-weight:800;line-height:1.1;margin-bottom:1.25rem}
+.hero h1 span{color:var(--accent2)}
+.hero p{font-size:1.1rem;color:var(--text2);max-width:520px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+/* stats bar */
+.stats-bar{display:flex;justify-content:center;gap:0;flex-wrap:wrap;margin:60px auto 0;max-width:760px;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.stat-item{flex:1;min-width:160px;padding:1.5rem;text-align:center;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-value{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--accent2)}
+.stat-label{font-size:.8rem;color:var(--text3);margin-top:.25rem}
+
+/* how it works */
+.section{padding:80px 2rem;max-width:1100px;margin:0 auto}
+.section-title{font-size:1.8rem;font-weight:700;margin-bottom:.5rem}
+.section-sub{color:var(--text2);margin-bottom:3rem}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.75rem;position:relative;overflow:hidden;transition:.3s}
+.step-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.step-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.step-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:rgba(124,90,240,.2);position:absolute;top:1rem;right:1.25rem}
+.step-icon{font-size:2rem;margin-bottom:1rem}
+.step-card h3{font-size:1.05rem;margin-bottom:.5rem}
+.step-card p{font-size:.88rem;color:var(--text2);line-height:1.6}
+
+/* footer */
+.footer{border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--text3);font-size:.85rem}
+
+/* ── AUTH ── */
+#page-auth{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:var(--bg)}
+#page-auth::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 600px 400px at 50% 30%,rgba(124,90,240,.12),transparent);pointer-events:none}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r3);padding:2.5rem;width:100%;max-width:440px;position:relative}
+.auth-logo{display:flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;justify-content:center;margin-bottom:2rem}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:var(--r);padding:4px;margin-bottom:2rem}
+.auth-tab{flex:1;padding:.55rem;border:none;background:transparent;color:var(--text2);border-radius:var(--r);font-size:.9rem;font-family:'DM Sans',sans-serif;transition:.2s}
+.auth-tab.active{background:var(--accent);color:#fff}
+.form-group{margin-bottom:1.25rem}
+.form-label{display:block;font-size:.85rem;color:var(--text2);margin-bottom:.5rem}
+.form-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-size:.95rem;outline:none;transition:.2s}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,90,240,.15)}
+.form-input::placeholder{color:var(--text3)}
+select.form-input option{background:var(--bg2)}
+.form-hint{font-size:.8rem;color:var(--text3);margin-top:.4rem}
+
+/* ── DASHBOARD LAYOUT ── */
+#page-dashboard{display:none;flex-direction:column;min-height:100vh;background:var(--bg)}
+#page-dashboard.active{display:flex}
+.dash-layout{display:flex;flex:1;padding-top:64px}
+.sidebar{width:240px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:1.5rem 1rem;position:fixed;top:64px;bottom:0;left:0;overflow-y:auto;z-index:50}
+.sidebar-section{margin-bottom:1.5rem}
+.sidebar-title{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:.75rem;padding:0 .75rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:.65rem .75rem;border-radius:var(--r);color:var(--text2);font-size:.9rem;transition:.2s;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--bg2);color:var(--text)}
+.nav-item.active{background:rgba(124,90,240,.15);color:var(--accent2);border-left:3px solid var(--accent)}
+.nav-item .icon{width:18px;text-align:center;font-size:1rem}
+.main-content{flex:1;margin-left:240px;padding:2rem;min-height:calc(100vh - 64px)}
+.sub-page{display:none}
+.sub-page.active{display:block}
+
+/* ── CARDS & GRIDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem}
+.card-sm{padding:1.25rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.green::after{background:var(--green)}
+.kpi.purple::after{background:var(--accent)}
+.kpi.gold::after{background:var(--gold)}
+.kpi.red::after{background:var(--red)}
+.kpi-label{font-size:.82rem;color:var(--text2);margin-bottom:.5rem}
+.kpi-value{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800}
+.kpi-sub{font-size:.78rem;color:var(--text3);margin-top:.25rem}
+
+/* page header */
+.page-header{margin-bottom:2rem}
+.page-header h2{font-size:1.6rem;font-weight:700;margin-bottom:.25rem}
+.page-header p{color:var(--text2);font-size:.9rem}
+
+/* ── ADS LIST ── */
+.ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.ad-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:.3s;cursor:pointer}
+.ad-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--shadow)}
+.ad-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative}
+.ad-thumb .duration-badge{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;font-size:.75rem;padding:.2rem .5rem;border-radius:6px}
+.ad-body{padding:1.25rem}
+.ad-brand{font-size:.78rem;color:var(--text3);margin-bottom:.25rem}
+.ad-title{font-weight:600;margin-bottom:.75rem;line-height:1.3}
+.ad-reward{display:flex;align-items:center;justify-content:space-between}
+.reward-badge{display:flex;align-items:center;gap:6px;color:var(--green);font-weight:600;font-size:.9rem}
+.ad-status{font-size:.78rem;padding:.2rem .65rem;border-radius:999px}
+.ad-status.available{background:rgba(34,212,135,.1);color:var(--green)}
+.ad-status.watched{background:rgba(120,100,255,.1);color:var(--accent2)}
+
+/* ── AD PLAYER ── */
+.player-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;display:none}
+.player-overlay.open{display:flex}
+.player-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);width:100%;max-width:720px;overflow:hidden;box-shadow:var(--shadow)}
+.player-top{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.player-top h3{font-size:1rem;font-weight:600}
+.player-screen{height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:2rem;text-align:center;position:relative}
+.player-thumb{font-size:5rem}
+.player-brand{font-size:.9rem;color:var(--text3)}
+.player-title{font-size:1.2rem;font-weight:600}
+.player-bar-wrap{padding:0 1.5rem 1rem}
+.player-bar-bg{background:var(--bg3);border-radius:999px;height:6px;overflow:hidden;margin-bottom:.5rem}
+.player-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;width:0%;transition:width .5s linear}
+.player-timer{font-size:.85rem;color:var(--text2);text-align:right}
+.player-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.player-footer .info{font-size:.85rem;color:var(--text2)}
+#btn-claim{display:none}
+.no-skip{position:absolute;top:12px;right:12px;background:rgba(240,64,96,.15);border:1px solid rgba(240,64,96,.3);color:var(--red);font-size:.75rem;padding:.25rem .6rem;border-radius:6px;pointer-events:none}
+
+/* ── WALLET ── */
+.wallet-header{background:linear-gradient(135deg,var(--accent3),var(--accent));border-radius:var(--r3);padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.wallet-header::after{content:'$';position:absolute;right:-20px;bottom:-30px;font-family:'Syne',sans-serif;font-size:10rem;font-weight:800;opacity:.06}
+.wallet-label{font-size:.85rem;opacity:.75;margin-bottom:.5rem}
+.wallet-balance{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800}
+.wallet-pending{font-size:.85rem;opacity:.7;margin-top:.25rem}
+.withdraw-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.75rem;max-width:520px}
+.withdraw-methods{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.method-btn{flex:1;min-width:90px;padding:.6rem;border:1px solid var(--border);border-radius:var(--r);background:transparent;color:var(--text2);font-size:.82rem;text-align:center;cursor:pointer;transition:.2s}
+.method-btn.active{border-color:var(--accent);background:rgba(124,90,240,.1);color:var(--accent2)}
+.history-table{width:100%;border-collapse:collapse;margin-top:1.5rem}
+.history-table th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
+.history-table td{padding:.85rem 1rem;border-bottom:1px solid rgba(120,100,255,.06);font-size:.88rem}
+.status-badge{display:inline-block;padding:.2rem .65rem;border-radius:999px;font-size:.75rem;font-weight:500}
+.status-badge.pending{background:rgba(240,192,64,.1);color:var(--gold)}
+.status-badge.analysis{background:rgba(124,90,240,.1);color:var(--accent2)}
+.status-badge.paid{background:rgba(34,212,135,.1);color:var(--green)}
+.status-badge.rejected{background:rgba(240,64,96,.1);color:var(--red)}
+
+/* ── MISSIONS / RANKING ── */
+.missions-list{display:flex;flex-direction:column;gap:.75rem}
+.mission-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.25rem;display:flex;align-items:center;gap:1rem}
+.mission-icon{font-size:1.5rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:var(--r);flex-shrink:0}
+.mission-info{flex:1}
+.mission-info h4{font-size:.95rem;margin-bottom:.2rem}
+.mission-info p{font-size:.82rem;color:var(--text2)}
+.mission-progress{height:5px;background:var(--bg2);border-radius:999px;margin-top:.5rem;overflow:hidden}
+.mission-progress-bar{height:100%;background:var(--accent);border-radius:999px;transition:width .5s}
+.mission-reward{color:var(--green);font-weight:600;font-size:.9rem;white-space:nowrap}
+.mission-check{font-size:1.2rem}
+
+/* ranking */
+.rank-list{display:flex;flex-direction:column;gap:.75rem}
+.rank-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.rank-pos{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;width:32px;color:var(--text3)}
+.rank-pos.gold{color:var(--gold)}
+.rank-pos.silver{color:#aaa}
+.rank-pos.bronze{color:#cd7f32}
+.rank-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:600;color:var(--accent2);flex-shrink:0}
+.rank-name{flex:1}
+.rank-earned{color:var(--green);font-weight:600}
+
+/* ── REFERRAL ── */
+.ref-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:1.75rem;max-width:560px}
+.ref-code-display{display:flex;align-items:center;gap:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin:1rem 0}
+.ref-code{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:var(--accent2);flex:1;letter-spacing:.05em}
+.ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+
+/* ── ADMIN ── */
+.admin-tag{display:inline-block;background:var(--gold);color:#1a1400;font-size:.7rem;font-weight:700;padding:.15rem .45rem;border-radius:4px;margin-left:.5rem;vertical-align:middle}
+.admin-table{width:100%;border-collapse:collapse}
+.admin-table th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
+.admin-table td{padding:.85rem 1rem;border-bottom:1px solid rgba(120,100,255,.06);font-size:.85rem;vertical-align:middle}
+.admin-table tr:hover td{background:rgba(124,90,240,.04)}
+.actions{display:flex;gap:.5rem}
+
+/* ── NOTIFICATIONS ── */
+.notif-wrapper{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+.notif{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:.85rem 1.25rem;min-width:260px;max-width:320px;box-shadow:var(--shadow);display:flex;align-items:center;gap:.75rem;animation:slideIn .3s ease;pointer-events:all}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{to{transform:translateX(120%);opacity:0}}
+.notif.out{animation:slideOut .3s ease forwards}
+.notif-icon{font-size:1.1rem}
+.notif-text{flex:1;font-size:.85rem}
+.notif-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.9rem;padding:0 .25rem}
+
+/* ── SUPPORT CHAT ── */
+.chat-bubble{position:fixed;bottom:1.5rem;left:1.5rem;z-index:150}
+.chat-toggle{width:52px;height:52px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(124,90,240,.5);transition:.2s}
+.chat-toggle:hover{transform:scale(1.08)}
+.chat-window{position:fixed;bottom:6rem;left:1.5rem;width:300px;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden;display:none}
+.chat-window.open{display:flex;flex-direction:column}
+.chat-head{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap.5rem}
+.chat-head h4{font-size:.9rem;margin-left:.5rem}
+.chat-msgs{flex:1;height:200px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.5rem}
+.chat-msg{background:var(--bg2);border-radius:var(--r);padding:.6rem .85rem;font-size:.83rem;max-width:85%}
+.chat-msg.user{background:rgba(124,90,240,.2);align-self:flex-end}
+.chat-input-row{display:flex;padding:.75rem;border-top:1px solid var(--border);gap:.5rem}
+.chat-input-row input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.5rem .75rem;color:var(--text);font-size:.85rem;outline:none}
+
+/* ── LEVEL SYSTEM ── */
+.level-bar-wrap{margin-top:1rem}
+.level-bar-bg{background:var(--bg2);border-radius:999px;height:8px;overflow:hidden}
+.level-bar{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent2));border-radius:999px;transition:width .5s}
+.level-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text3);margin-top:.4rem}
+
+/* ── DAILY BONUS ── */
+.bonus-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;display:none}
+.bonus-modal-overlay.open{display:flex}
+.bonus-modal{background:var(--card);border:1px solid var(--border2);border-radius:var(--r3);padding:2.5rem;text-align:center;max-width:380px;width:100%;margin:1rem}
+.bonus-coins{font-size:5rem;margin-bottom:1rem}
+.bonus-amount{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--gold);margin:.5rem 0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:.3s}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .stats-bar{flex-direction:column}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border)}
+  .stat-item:last-child{border-bottom:none}
+  .ads-grid{grid-template-columns:1fr}
+  .hamburger{display:flex}
+}
+@media(min-width:769px){.hamburger{display:none}}
+.hamburger{background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;margin-right:.5rem}
+.sidebar-backdrop{display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.5)}
+.sidebar-backdrop.open{display:block}
+
+/* ── MISC ── */
+.divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.text-gold{color:var(--gold)}
+.text-accent{color:var(--accent2)}
+.text-muted{color:var(--text2)}
+.mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}.mt-3{margin-top:1.5rem}.mt-4{margin-top:2rem}
+.mb-1{margin-bottom:.5rem}.mb-2{margin-bottom:1rem}
+.flex{display:flex}.items-center{align-items:center}.gap-1{gap:.5rem}.gap-2{gap:1rem}.justify-between{justify-content:space-between}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+.empty-state{text-align:center;padding:3rem;color:var(--text3)}
+.empty-state .icon{font-size:3rem;margin-bottom:1rem}
+.tag{display:inline-block;padding:.2rem .6rem;border-radius:6px;font-size:.75rem;font-weight:500}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="navbar" id="main-navbar">
+  <div class="flex items-center gap-2">
+    <button class="hamburger" onclick="toggleSidebar()" id="hamburger-btn" style="display:none">☰</button>
+    <div class="nav-logo"><span class="dot"></span>ViewMoney</div>
+  </div>
+  <div class="nav-links" id="nav-links-landing">
+    <a href="#" onclick="scrollSection('how')">Como funciona</a>
+    <a href="#" onclick="scrollSection('rewards')">Recompensas</a>
+  </div>
+  <div class="nav-actions" id="nav-actions-landing">
+    <button class="btn btn-ghost btn-sm" onclick="showAuth('login')">Entrar</button>
+    <button class="btn btn-primary btn-sm" onclick="showAuth('register')">Cadastrar</button>
+  </div>
+  <div class="nav-actions" id="nav-actions-dash" style="display:none">
+    <span id="nav-balance-display" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--green);font-size:1rem">KZ 0,00</span>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Sair</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME PAGE ═══════════════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge"><span class="pulse"></span>Beta Aberto — Vagas Limitadas</div>
+    <h1>Assista anúncios e<br><span>receba dinheiro</span></h1>
+    <p>A plataforma mais fácil de Angola para ganhar recompensas reais assistindo propagandas de marcas parceiras.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary btn-xl" onclick="showAuth('register')">🚀 Começar Grátis</button>
+      <button class="btn btn-ghost btn-xl" onclick="showAuth('login')">Já tenho conta</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="stat-online">0</div>
+        <div class="stat-label">Usuários Online</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-paid">KZ 0</div>
+        <div class="stat-label">Total Pago Hoje</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-ads">0</div>
+        <div class="stat-label">Anúncios Disponíveis</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">KZ 2,50</div>
+        <div class="stat-label">Por Anúncio Assistido</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="how">
+    <div style="text-align:center">
+      <h2 class="section-title">Como funciona?</h2>
+      <p class="section-sub">Em 4 passos simples você começa a ganhar hoje mesmo</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card"><span class="step-num">1</span><div class="step-icon">📝</div><h3>Cadastre-se</h3><p>Crie sua conta grátis em menos de 1 minuto com nome e email.</p></div>
+      <div class="step-card"><span class="step-num">2</span><div class="step-icon">📺</div><h3>Assista anúncios</h3><p>Escolha anúncios disponíveis e assista por 15 a 30 segundos completos.</p></div>
+      <div class="step-card"><span class="step-num">3</span><div class="step-icon">💰</div><h3>Ganhe recompensas</h3><p>Após cada anúncio, receba KZ na sua carteira automaticamente.</p></div>
+      <div class="step-card"><span class="step-num">4</span><div class="step-icon">🏧</div><h3>Saque o dinheiro</h3><p>Transfira para sua conta bancária, Pix, PayPal ou carteira móvel.</p></div>
+    </div>
+  </div>
+
+  <div class="section" id="rewards" style="text-align:center">
+    <h2 class="section-title">Sistema de Recompensas</h2>
+    <p class="section-sub">Quanto mais você assiste, mais você ganha</p>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-icon">🎯</div><h3>Missões Diárias</h3><p>Complete missões especiais para ganhar bônus extras todo dia.</p></div>
+      <div class="step-card"><div class="step-icon">🏆</div><h3>Ranking Semanal</h3><p>Os top usuários da semana ganham prêmios especiais em dinheiro.</p></div>
+      <div class="step-card"><div class="step-icon">👥</div><h3>Indicação</h3><p>Ganhe KZ 5,00 para cada amigo que se cadastrar com seu link.</p></div>
+      <div class="step-card"><div class="step-icon">🎁</div><h3>Bônus Diário</h3><p>Faça login todo dia e ganhe bônus crescente de streak.</p></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2026 ViewMoney — Plataforma Beta. Todos os dados são fictícios para testes.</p>
+    <p style="margin-top:.5rem">💜 Desenvolvido por giovany e sabino</p>
+  </div>
+</div>
+
+<!-- ═══════════════ AUTH PAGE ═══════════════ -->
+<div class="page" id="page-auth" style="display:none">
+  <div class="auth-box">
+    <div class="auth-logo"><span style="font-size:1.5rem">💸</span>ViewMoney</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Cadastrar</button>
+    </div>
+    <!-- LOGIN -->
+    <div id="form-login">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="login-email" placeholder="seu@email.com"></div>
+      <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" id="login-pass" placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-block btn-lg mt-2" onclick="doLogin()">Entrar na conta</button>
+      <div class="text-center mt-2" style="font-size:.85rem;color:var(--text3)">
+        <a href="#" onclick="loginAdmin()" style="color:var(--accent2)">Entrar como Administrador</a>
+      </div>
+    </div>
+    <!-- REGISTER -->
+    <div id="form-register" style="display:none">
+      <div class="form-group"><label class="form-label">Nome Completo</label><input class="form-input" type="text" id="reg-name" placeholder="Seu nome completo"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="reg-email" placeholder="seu@email.com"></div>
+      <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"></div>
+      <div class="form-group"><label class="form-label">Confirmar Senha</label><input class="form-input" type="password" id="reg-pass2" placeholder="Repita a senha"></div>
+      <div class="form-group"><label class="form-label">Código de Indicação (opcional)</label><input class="form-input" type="text" id="reg-ref" placeholder="Ex: VM-ABCD1234"></div>
+      <button class="btn btn-primary btn-block btn-lg mt-2" onclick="doRegister()">Criar minha conta</button>
+    </div>
+    <p class="mt-2" style="text-align:center;font-size:.82rem;color:var(--text3)">Ao continuar você aceita nossos Termos de Uso</p>
+    <button class="btn btn-ghost btn-sm mt-2" onclick="showPage('page-home')" style="width:100%">← Voltar ao início</button>
+  </div>
+</div>
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-layout">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Principal</div>
+        <button class="nav-item active" onclick="showSubPage('overview')"><span class="icon">🏠</span>Painel</button>
+        <button class="nav-item" onclick="showSubPage('ads')"><span class="icon">📺</span>Assistir Anúncios</button>
+        <button class="nav-item" onclick="showSubPage('missions')"><span class="icon">🎯</span>Missões</button>
+        <button class="nav-item" onclick="showSubPage('ranking')"><span class="icon">🏆</span>Ranking</button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Financeiro</div>
+        <button class="nav-item" onclick="showSubPage('wallet')"><span class="icon">💳</span>Carteira</button>
+        <button class="nav-item" onclick="showSubPage('referral')"><span class="icon">👥</span>Indicações</button>
+      </div>
+      <div class="sidebar-section" id="admin-nav" style="display:none">
+        <div class="sidebar-title">Admin</div>
+        <button class="nav-item" onclick="showSubPage('admin')"><span class="icon">⚙️</span>Administração<span class="admin-tag">ADM</span></button>
+      </div>
+      <div style="padding:.75rem;margin-top:auto">
+        <div style="background:var(--bg2);border-radius:var(--r);padding:1rem">
+          <div style="font-size:.78rem;color:var(--text3)">Nível do usuário</div>
+          <div style="font-weight:600;margin:.25rem 0" id="sidebar-level">Iniciante</div>
+          <div class="level-bar-wrap">
+            <div class="level-bar-bg"><div class="level-bar" id="sidebar-level-bar" style="width:0%"></div></div>
+            <div class="level-label"><span>0 XP</span><span id="sidebar-level-max">100 XP</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- OVERVIEW -->
+      <div class="sub-page active" id="sub-overview">
+        <div class="page-header">
+          <h2>Bem-vindo, <span id="dash-username">Usuário</span>! 👋</h2>
+          <p>Aqui está um resumo da sua atividade hoje.</p>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi green"><div class="kpi-label">Saldo Disponível</div><div class="kpi-value text-green" id="kpi-balance">KZ 0,00</div><div class="kpi-sub">Disponível para saque</div></div>
+          <div class="kpi purple"><div class="kpi-label">Ganhos Totais</div><div class="kpi-value" id="kpi-total">KZ 0,00</div><div class="kpi-sub">Desde o cadastro</div></div>
+          <div class="kpi gold"><div class="kpi-label">Anúncios Vistos</div><div class="kpi-value" id="kpi-watched">0</div><div class="kpi-sub">Total acumulado</div></div>
+          <div class="kpi red"><div class="kpi-label">Meta Diária</div><div class="kpi-value" id="kpi-daily">0/10</div><div class="kpi-sub">Anúncios hoje</div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="margin-bottom:1rem;font-size:1rem">📊 Progresso Diário</h3>
+            <div class="kpi-label">Anúncios hoje</div>
+            <div style="display:flex;align-items:center;gap:1rem;margin:.5rem 0">
+              <div class="level-bar-bg" style="flex:1"><div class="level-bar" id="daily-progress-bar" style="width:0%"></div></div>
+              <span id="daily-progress-text" style="font-size:.85rem;color:var(--text2)">0/10</span>
+            </div>
+            <div class="kpi-label mt-2">Ganhos hoje</div>
+            <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:var(--green)" id="kpi-today">KZ 0,00</div>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:1rem;font-size:1rem">⚡ Ações Rápidas</h3>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <button class="btn btn-primary" onclick="showSubPage('ads')">📺 Assistir Anúncios</button>
+              <button class="btn btn-ghost" onclick="showSubPage('wallet')">💳 Solicitar Saque</button>
+              <button class="btn btn-ghost" onclick="showSubPage('missions')">🎯 Ver Missões</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-3">
+          <h3 style="margin-bottom:1rem;font-size:1rem">📜 Histórico Recente</h3>
+          <div id="history-list">
+            <div class="empty-state"><div class="icon">📋</div><p>Nenhuma atividade ainda. Comece assistindo anúncios!</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADS -->
+      <div class="sub-page" id="sub-ads">
+        <div class="page-header">
+          <h2>📺 Anúncios Disponíveis</h2>
+          <p>Assista por completo para receber sua recompensa.</p>
+        </div>
+        <div class="ads-grid" id="ads-grid"></div>
+      </div>
+
+      <!-- MISSIONS -->
+      <div class="sub-page" id="sub-missions">
+        <div class="page-header">
+          <h2>🎯 Missões Diárias</h2>
+          <p>Complete para ganhar bônus extras. Reiniciam à meia-noite.</p>
+        </div>
+        <div class="missions-list" id="missions-list"></div>
+      </div>
+
+      <!-- RANKING -->
+      <div class="sub-page" id="sub-ranking">
+        <div class="page-header">
+          <h2>🏆 Ranking Semanal</h2>
+          <p>Os top usuários ganham prêmios especiais no final da semana.</p>
+        </div>
+        <div class="rank-list" id="rank-list"></div>
+      </div>
+
+      <!-- WALLET -->
+      <div class="sub-page" id="sub-wallet">
+        <div class="page-header">
+          <h2>💳 Carteira</h2>
+          <p>Gerencie seus ganhos e solicite saques.</p>
+        </div>
+        <div class="wallet-header">
+          <div class="wallet-label">Saldo Disponível</div>
+          <div class="wallet-balance" id="wallet-balance-display">KZ 0,00</div>
+          <div class="wallet-pending" id="wallet-pending-display">KZ 0,00 pendente</div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <h3 style="margin-bottom:1rem;font-size:1.05rem">💸 Solicitar Saque</h3>
+            <div class="withdraw-form">
+              <div class="form-group"><label class="form-label">Nome Completo</label><input class="form-input" id="w-name" placeholder="Como no banco"></div>
+              <div class="form-group"><label class="form-label">Método de Pagamento</label>
+                <div class="withdraw-methods">
+                  <button class="method-btn active" onclick="setMethod(this,'transfer')">🏦 Banco</button>
+                  <button class="method-btn" onclick="setMethod(this,'pix')">⚡ Pix</button>
+                  <button class="method-btn" onclick="setMethod(this,'paypal')">🅿️ PayPal</button>
+                  <button class="method-btn" onclick="setMethod(this,'mobile')">📱 Móvel</button>
+                </div>
+              </div>
+              <div class="form-group" id="bank-field"><label class="form-label">Banco / Instituição</label><input class="form-input" id="w-bank" placeholder="Nome do banco"></div>
+              <div class="form-group"><label class="form-label" id="w-account-label">Número da Conta / IBAN</label><input class="form-input" id="w-account" placeholder="Insira os dados"></div>
+              <div class="form-group"><label class="form-label">País</label>
+                <select class="form-input" id="w-country">
+                  <option>Angola</option><option>Brasil</option><option>Portugal</option><option>Moçambique</option><option>Outro</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Valor a Sacar (KZ)</label><input class="form-input" type="number" id="w-amount" placeholder="Mínimo: KZ 50,00"></div>
+              <div class="form-hint mb-2">Valor mínimo: KZ 50,00 · Prazo: 1-3 dias úteis</div>
+              <button class="btn btn-primary btn-block" onclick="requestWithdraw()">Solicitar Saque</button>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom:1rem;font-size:1.05rem">📋 Histórico de Saques</h3>
+            <div id="withdraw-history">
+              <div class="empty-state"><div class="icon">📭</div><p>Nenhum saque ainda.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFERRAL -->
+      <div class="sub-page" id="sub-referral">
+        <div class="page-header"><h2>👥 Programa de Indicações</h2><p>Ganhe KZ 5,00 por cada amigo que se cadastrar com seu link.</p></div>
+        <div class="ref-box">
+          <p style="color:var(--text2);font-size:.9rem">Seu código de indicação:</p>
+          <div class="ref-code-display">
+            <span class="ref-code" id="ref-code-display">VM-XXXX0000</span>
+            <button class="btn btn-ghost btn-sm" onclick="copyRef()">📋 Copiar</button>
+          </div>
+          <p style="color:var(--text2);font-size:.85rem">Compartilhe seu link:</p>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin:.5rem 0;font-size:.82rem;color:var(--text3);word-break:break-all" id="ref-link-display">https://viewmoney.ao/r/VM-XXXX0000</div>
+          <div class="ref-stats mt-2">
+            <div class="kpi green card-sm"><div class="kpi-label">Indicados</div><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800" id="ref-count">0</div></div>
+            <div class="kpi gold card-sm"><div class="kpi-label">Ganhos com indicações</div><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold)" id="ref-earned">KZ 0,00</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="sub-page" id="sub-admin">
+        <div class="page-header"><h2>⚙️ Painel Administrativo <span class="admin-tag">ADM</span></h2><p>Gestão completa da plataforma.</p></div>
+        <!-- Admin tabs -->
+        <div class="auth-tabs" style="max-width:600px;margin-bottom:2rem">
+          <button class="auth-tab active" onclick="switchAdminTab('withdrawals')">Saques</button>
+          <button class="auth-tab" onclick="switchAdminTab('users')">Usuários</button>
+          <button class="auth-tab" onclick="switchAdminTab('ads-admin')">Anúncios</button>
+          <button class="auth-tab" onclick="switchAdminTab('stats')">Estatísticas</button>
+        </div>
+
+        <div id="admin-withdrawals">
+          <div class="card">
+            <h3 style="margin-bottom:1rem;font-size:1rem">Solicitações de Saque Pendentes</h3>
+            <div style="overflow-x:auto"><table class="admin-table" id="admin-withdraw-table">
+              <thead><tr><th>Usuário</th><th>Valor</th><th>Método</th><th>Conta</th><th>Data</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="admin-withdraw-body"><tr><td colspan="7" style="text-align:center;color:var(--text3);padding:2rem">Nenhum saque pendente</td></tr></tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <div id="admin-users" style="display:none">
+          <div class="card">
+            <h3 style="margin-bottom:1rem;font-size:1rem">Usuários Cadastrados</h3>
+            <div style="overflow-x:auto"><table class="admin-table" id="admin-users-table">
+              <thead><tr><th>Nome</th><th>Email</th><th>Saldo</th><th>Anúncios</th><th>Cadastro</th><th>Status</th></tr></thead>
+              <tbody id="admin-users-body"></tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <div id="admin-ads-admin" style="display:none">
+          <div class="card" style="max-width:520px;margin-bottom:1.5rem">
+            <h3 style="margin-bottom:1rem;font-size:1rem">Adicionar Novo Anúncio</h3>
+            <div class="form-group"><label class="form-label">Título do Anúncio</label><input class="form-input" id="adm-ad-title" placeholder="Nome do produto"></div>
+            <div class="form-group"><label class="form-label">Marca</label><input class="form-input" id="adm-ad-brand" placeholder="Nome da empresa"></div>
+            <div class="form-group"><label class="form-label">Emoji (ícone)</label><input class="form-input" id="adm-ad-emoji" placeholder="Ex: 🛍️" value="📦"></div>
+            <div class="form-group"><label class="form-label">Duração (segundos)</label><input class="form-input" type="number" id="adm-ad-duration" value="20" min="10" max="60"></div>
+            <div class="form-group"><label class="form-label">Recompensa (KZ)</label><input class="form-input" type="number" id="adm-ad-reward" value="2.50" step="0.50"></div>
+            <div class="form-group"><label class="form-label">Cor de fundo</label>
+              <select class="form-input" id="adm-ad-color">
+                <option value="#1a0a2e">Roxo Escuro</option><option value="#0a1a2e">Azul Escuro</option><option value="#0a2e1a">Verde Escuro</option><option value="#2e1a0a">Laranja Escuro</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="adminAddAd()">Adicionar Anúncio</button>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:1rem;font-size:1rem">Anúncios Ativos (<span id="ads-count">0</span>)</h3>
+            <div id="admin-ads-list"></div>
+          </div>
+        </div>
+
+        <div id="admin-stats" style="display:none">
+          <div class="kpi-grid">
+            <div class="kpi green"><div class="kpi-label">Total de Usuários</div><div class="kpi-value" id="adm-stat-users">0</div></div>
+            <div class="kpi purple"><div class="kpi-label">Total Pago</div><div class="kpi-value" id="adm-stat-paid">KZ 0</div></div>
+            <div class="kpi gold"><div class="kpi-label">Anúncios Assistidos</div><div class="kpi-value" id="adm-stat-views">0</div></div>
+            <div class="kpi red"><div class="kpi-label">Saques Pendentes</div><div class="kpi-value" id="adm-stat-pend">0</div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════ AD PLAYER ═══════════════ -->
+<div class="player-overlay" id="player-overlay">
+  <div class="player-box">
+    <div class="player-top">
+      <h3 id="player-brand-title">Carregando...</h3>
+      <span style="color:var(--text3);font-size:.85rem">Não pode pular</span>
+    </div>
+    <div class="player-screen">
+      <div class="no-skip">🚫 Anúncio obrigatório</div>
+      <div class="player-thumb" id="player-emoji">📦</div>
+      <div class="player-brand" id="player-brand-sub"></div>
+      <div class="player-title" id="player-title-text"></div>
+      <div id="player-anim" style="margin-top:1rem"></div>
+    </div>
+    <div class="player-bar-wrap">
+      <div class="player-bar-bg"><div class="player-bar" id="player-bar"></div></div>
+      <div class="player-timer" id="player-timer">Aguarde 20s...</div>
+    </div>
+    <div class="player-footer">
+      <div class="info" id="player-reward-info">Recompensa: <strong>KZ 2,50</strong></div>
+      <div>
+        <button class="btn btn-ghost btn-sm" id="btn-cancel" onclick="closePlayer()">Fechar</button>
+        <button class="btn btn-gold" id="btn-claim" onclick="claimReward()">🎉 Receber Recompensa!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DAILY BONUS MODAL ═══════════════ -->
+<div class="bonus-modal-overlay" id="bonus-modal">
+  <div class="bonus-modal">
+    <div class="bonus-coins">🎁</div>
+    <h2>Bônus de Login Diário!</h2>
+    <p style="color:var(--text2);margin:.75rem 0">Você ganhou seu bônus de hoje:</p>
+    <div class="bonus-amount" id="bonus-amount-display">KZ 1,00</div>
+    <p style="color:var(--text3);font-size:.85rem;margin-bottom:1.5rem" id="bonus-streak-text">Streak: 1 dia</p>
+    <button class="btn btn-gold btn-lg" onclick="claimBonus()">Resgatar Bônus!</button>
+  </div>
+</div>
+
+<!-- ═══════════════ NOTIFICATIONS ═══════════════ -->
+<div class="notif-wrapper" id="notif-wrapper"></div>
+
+<!-- ═══════════════ SUPPORT CHAT ═══════════════ -->
+<div class="chat-bubble" id="chat-bubble" style="display:none">
+  <button class="chat-toggle" onclick="toggleChat()">💬</button>
+  <div class="chat-window" id="chat-window">
+    <div class="chat-head" style="display:flex;align-items:center;gap:.5rem">
+      <span style="font-size:1.2rem">🤖</span>
+      <h4>Suporte ViewMoney</h4>
+      <span style="margin-left:auto;width:8px;height:8px;background:var(--green);border-radius:50%"></span>
+    </div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="chat-msg">Olá! Sou o assistente da ViewMoney. Como posso ajudar? 😊</div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Escreva sua mensagem..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-primary btn-sm" onclick="sendChat()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+let state = {
+  currentUser: null,
+  users: [],
+  ads: [],
+  withdrawals: [],
+  globalStats: { totalPaid: 12450, totalViews: 4980 }
+};
+
+const ADMIN_EMAIL = 'admin@viewmoney.ao';
+const ADMIN_PASS = 'admin123';
+let currentAd = null;
+let playerTimer = null;
+let playerSeconds = 0;
+let withdrawMethod = 'transfer';
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+function init() {
+  loadState();
+  if (!state.ads.length) seedAds();
+  animateHomeStats();
+  // auto-login
+  const saved = localStorage.getItem('vm_current');
+  if (saved) {
+    state.currentUser = JSON.parse(saved);
+    enterDashboard();
+  }
+}
+
+function loadState() {
+  const s = localStorage.getItem('vm_state');
+  if (s) {
+    const loaded = JSON.parse(s);
+    state.users = loaded.users || [];
+    state.ads = loaded.ads || [];
+    state.withdrawals = loaded.withdrawals || [];
+    state.globalStats = loaded.globalStats || state.globalStats;
+  }
+}
+
+function saveState() {
+  localStorage.setItem('vm_state', JSON.stringify({
+    users: state.users, ads: state.ads,
+    withdrawals: state.withdrawals, globalStats: state.globalStats
+  }));
+  if (state.currentUser) {
+    localStorage.setItem('vm_current', JSON.stringify(state.currentUser));
+  }
+}
+
+function seedAds() {
+  state.ads = [
+    { id: 1, title: 'Cerveja Cuca Angola', brand: 'Cuca', emoji: '🍺', duration: 20, reward: 2.50, color: '#0a1a0a', views: 234 },
+    { id: 2, title: 'BAI Digital Banking', brand: 'BAI', emoji: '🏦', duration: 30, reward: 3.50, color: '#0a0a2e', views: 189 },
+    { id: 3, title: 'Multichoice DStv', brand: 'DStv', emoji: '📡', duration: 25, reward: 3.00, color: '#1a0a1a', views: 312 },
+    { id: 4, title: 'Unitel Telefonia', brand: 'Unitel', emoji: '📱', duration: 15, reward: 2.00, color: '#2e0a0a', views: 456 },
+    { id: 5, title: 'Super Bock Premium', brand: 'Super Bock', emoji: '🍻', duration: 20, reward: 2.50, color: '#0a2e0a', views: 178 },
+    { id: 6, title: 'Rede Record Angola', brand: 'Record', emoji: '📺', duration: 30, reward: 3.50, color: '#1a1a0a', views: 267 },
+    { id: 7, title: 'Jumia Angola Online', brand: 'Jumia', emoji: '🛒', duration: 15, reward: 2.00, color: '#0a2e2e', views: 523 },
+    { id: 8, title: 'Movicel Tarifas', brand: 'Movicel', emoji: '📶', duration: 20, reward: 2.50, color: '#2e1a00', views: 341 },
+  ];
+  saveState();
+}
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  const el = document.getElementById(id);
+  el.style.display = id === 'page-dashboard' ? 'flex' : (id === 'page-auth' ? 'flex' : 'block');
+  setTimeout(() => el.classList.add('active'), 10);
+  document.getElementById('nav-links-landing').style.display = id === 'page-home' ? 'flex' : 'none';
+  document.getElementById('nav-actions-landing').style.display = id === 'page-home' ? 'flex' : 'none';
+  document.getElementById('nav-actions-dash').style.display = id === 'page-dashboard' ? 'flex' : 'none';
+  document.getElementById('hamburger-btn').style.display = id === 'page-dashboard' ? 'flex' : 'none';
+  document.getElementById('chat-bubble').style.display = id === 'page-dashboard' ? 'block' : 'none';
+}
+
+function showSubPage(name) {
+  document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById('sub-' + name);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(name)) n.classList.add('active'); });
+  if (name === 'overview') renderOverview();
+  if (name === 'ads') renderAds();
+  if (name === 'missions') renderMissions();
+  if (name === 'ranking') renderRanking();
+  if (name === 'wallet') renderWallet();
+  if (name === 'referral') renderReferral();
+  if (name === 'admin') renderAdmin();
+  closeSidebar();
+}
+
+function scrollSection(id) { document.getElementById(id) && document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-backdrop').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+}
+
+// ════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════
+function showAuth(tab) {
+  showPage('page-auth');
+  switchTab(tab);
+}
+
+function switchTab(tab) {
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const user = state.users.find(u => u.email === email && u.password === pass);
+  if (!user) { notify('Email ou senha incorretos', '❌'); return; }
+  state.currentUser = user;
+  enterDashboard();
+}
+
+function loginAdmin() {
+  const adminUser = {
+    id: 'admin', name: 'Administrador', email: ADMIN_EMAIL, password: ADMIN_PASS,
+    balance: 0, totalEarned: 0, watchedAds: 0, todayWatched: 0, todayEarned: 0,
+    xp: 999, joinDate: new Date().toISOString(), refCode: 'VM-ADMIN000',
+    refCount: 0, refEarned: 0, dailyBonus: null, streak: 0, isAdmin: true,
+    withdrawalPending: 0, missions: {}
+  };
+  state.currentUser = adminUser;
+  enterDashboard();
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const ref = document.getElementById('reg-ref').value.trim();
+  if (!name || !email || !pass) { notify('Preencha todos os campos', '⚠️'); return; }
+  if (pass !== pass2) { notify('As senhas não coincidem', '❌'); return; }
+  if (pass.length < 6) { notify('Senha deve ter mínimo 6 caracteres', '⚠️'); return; }
+  if (state.users.find(u => u.email === email)) { notify('Email já cadastrado', '❌'); return; }
+  const code = 'VM-' + name.slice(0,4).toUpperCase().replace(/\s/g,'').padEnd(4,'X') + Math.floor(Math.random()*9000+1000);
+  const user = {
+    id: Date.now(), name, email, password: pass,
+    balance: 5.00, totalEarned: 5.00, watchedAds: 0, todayWatched: 0, todayEarned: 0,
+    xp: 0, joinDate: new Date().toISOString(), refCode: code,
+    refCount: 0, refEarned: 0, dailyBonus: null, streak: 0, isAdmin: false,
+    withdrawalPending: 0, missions: {}, watchedAdIds: []
+  };
+  // bonus de indicação
+  if (ref) {
+    const referrer = state.users.find(u => u.refCode === ref);
+    if (referrer) {
+      referrer.balance += 5; referrer.totalEarned += 5; referrer.refCount++;
+      referrer.refEarned = (referrer.refEarned || 0) + 5;
+      notify('Código de indicação aplicado! KZ 5,00 bônus', '🎉');
+    }
+  }
+  state.users.push(user);
+  state.currentUser = user;
+  saveState();
+  notify('Bem-vindo, ' + name + '! Bônus de KZ 5,00 na sua conta!', '🎉');
+  enterDashboard();
+}
+
+function logout() {
+  state.currentUser = null;
+  localStorage.removeItem('vm_current');
+  showPage('page-home');
+}
+
+// ════════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════════
+function enterDashboard() {
+  saveState();
+  showPage('page-dashboard');
+  const u = state.currentUser;
+  document.getElementById('dash-username').textContent = u.name.split(' ')[0];
+  document.getElementById('nav-balance-display').textContent = fmt(u.balance);
+  document.getElementById('admin-nav').style.display = u.isAdmin ? 'block' : 'none';
+  updateSidebarLevel();
+  showSubPage('overview');
+  checkDailyBonus();
+  setTimeout(() => notify('Bem-vindo de volta, ' + u.name.split(' ')[0] + '!', '👋'), 600);
+  fakeNotifications();
+}
+
+function updateSidebarLevel() {
+  const u = state.currentUser;
+  if (!u) return;
+  const levels = ['Iniciante','Bronze','Prata','Ouro','Platina','Diamante'];
+  const thresholds = [0, 50, 150, 350, 700, 1200];
+  let lvl = 0;
+  for (let i = 0; i < thresholds.length; i++) { if (u.xp >= thresholds[i]) lvl = i; }
+  const next = thresholds[lvl + 1] || u.xp + 100;
+  const pct = Math.min(100, ((u.xp - thresholds[lvl]) / (next - thresholds[lvl])) * 100);
+  document.getElementById('sidebar-level').textContent = levels[lvl];
+  document.getElementById('sidebar-level-bar').style.width = pct + '%';
+  document.getElementById('sidebar-level-max').textContent = next + ' XP';
+}
+
+function renderOverview() {
+  const u = state.currentUser;
+  if (!u) return;
+  document.getElementById('kpi-balance').textContent = fmt(u.balance);
+  document.getElementById('kpi-total').textContent = fmt(u.totalEarned || 0);
+  document.getElementById('kpi-watched').textContent = u.watchedAds || 0;
+  const today = u.todayWatched || 0;
+  document.getElementById('kpi-daily').textContent = today + '/10';
+  document.getElementById('kpi-today').textContent = fmt(u.todayEarned || 0);
+  const pct = Math.min(100, (today / 10) * 100);
+  document.getElementById('daily-progress-bar').style.width = pct + '%';
+  document.getElementById('daily-progress-text').textContent = today + '/10';
+  renderHistory();
+}
+
+function renderHistory() {
+  const u = state.currentUser;
+  const hist = (u.history || []).slice(-10).reverse();
+  const el = document.getElementById('history-list');
+  if (!hist.length) { el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>Nenhuma atividade ainda. Comece assistindo anúncios!</p></div>'; return; }
+  el.innerHTML = '<table class="history-table"><thead><tr><th>Atividade</th><th>Valor</th><th>Data</th></tr></thead><tbody>' +
+    hist.map(h => `<tr><td>${h.label}</td><td class="text-green">+${fmt(h.amount)}</td><td style="color:var(--text3);font-size:.82rem">${h.date}</td></tr>`).join('') +
+    '</tbody></table>';
+}
+
+// ════════════════════════════════════════════
+//  ADS SYSTEM
+// ════════════════════════════════════════════
+function renderAds() {
+  const u = state.currentUser;
+  const grid = document.getElementById('ads-grid');
+  grid.innerHTML = state.ads.map(ad => {
+    const watched = (u.watchedAdIds || []).includes(ad.id);
+    return `<div class="ad-card" onclick="${watched ? '' : 'openPlayer(' + ad.id + ')'}">
+      <div class="ad-thumb" style="background:${ad.color}">
+        <span style="font-size:4rem">${ad.emoji}</span>
+        <span class="duration-badge">⏱ ${ad.duration}s</span>
+      </div>
+      <div class="ad-body">
+        <div class="ad-brand">${ad.brand}</div>
+        <div class="ad-title">${ad.title}</div>
+        <div class="ad-reward">
+          <span class="reward-badge">💰 ${fmt(ad.reward)}</span>
+          <span class="ad-status ${watched ? 'watched' : 'available'}">${watched ? '✅ Visto' : '▶ Disponível'}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPlayer(adId) {
+  const ad = state.ads.find(a => a.id === adId);
+  if (!ad) return;
+  currentAd = ad;
+  document.getElementById('player-emoji').textContent = ad.emoji;
+  document.getElementById('player-brand-title').textContent = ad.brand + ' — ' + ad.title;
+  document.getElementById('player-brand-sub').textContent = ad.brand;
+  document.getElementById('player-title-text').textContent = ad.title;
+  document.getElementById('player-reward-info').innerHTML = 'Recompensa: <strong>' + fmt(ad.reward) + '</strong>';
+  document.getElementById('player-overlay').classList.add('open');
+  document.getElementById('btn-claim').style.display = 'none';
+  document.getElementById('btn-cancel').textContent = 'Fechar';
+  startPlayerTimer(ad.duration);
+}
+
+function startPlayerTimer(secs) {
+  let elapsed = 0;
+  document.getElementById('player-bar').style.width = '0%';
+  document.getElementById('player-timer').textContent = 'Aguarde ' + secs + 's...';
+  if (playerTimer) clearInterval(playerTimer);
+  playerTimer = setInterval(() => {
+    elapsed++;
+    const pct = (elapsed / secs) * 100;
+    document.getElementById('player-bar').style.width = pct + '%';
+    const remaining = secs - elapsed;
+    document.getElementById('player-timer').textContent = remaining > 0 ? 'Aguarde ' + remaining + 's...' : 'Pronto! Resgate sua recompensa.';
+    if (elapsed >= secs) {
+      clearInterval(playerTimer);
+      document.getElementById('btn-claim').style.display = 'inline-flex';
+      document.getElementById('btn-cancel').textContent = 'Cancelar';
+    }
+  }, 1000);
+}
+
+function closePlayer() {
+  if (playerTimer) clearInterval(playerTimer);
+  document.getElementById('player-overlay').classList.remove('open');
+  currentAd = null;
+}
+
+function claimReward() {
+  if (!currentAd || !state.currentUser) return;
+  const u = state.currentUser;
+  const ad = currentAd;
+  u.balance += ad.reward;
+  u.totalEarned = (u.totalEarned || 0) + ad.reward;
+  u.watchedAds = (u.watchedAds || 0) + 1;
+  u.todayWatched = (u.todayWatched || 0) + 1;
+  u.todayEarned = (u.todayEarned || 0) + ad.reward;
+  u.xp = (u.xp || 0) + 10;
+  u.watchedAdIds = u.watchedAdIds || [];
+  if (!u.watchedAdIds.includes(ad.id)) u.watchedAdIds.push(ad.id);
+  u.history = u.history || [];
+  u.history.push({ label: '📺 ' + ad.title, amount: ad.reward, date: new Date().toLocaleString('pt-BR') });
+  ad.views = (ad.views || 0) + 1;
+  state.globalStats.totalViews++;
+  state.globalStats.totalPaid += ad.reward;
+  checkMissions(u);
+  syncUser(u);
+  saveState();
+  document.getElementById('nav-balance-display').textContent = fmt(u.balance);
+  closePlayer();
+  notify('🎉 Você ganhou ' + fmt(ad.reward) + '!', '💰');
+  updateSidebarLevel();
+  renderOverview();
+  renderAds();
+}
+
+function syncUser(u) {
+  const idx = state.users.findIndex(x => x.id === u.id);
+  if (idx >= 0) state.users[idx] = { ...u };
+  state.currentUser = { ...u };
+  localStorage.setItem('vm_current', JSON.stringify(state.currentUser));
+}
+
+// ════════════════════════════════════════════
+//  MISSIONS
+// ════════════════════════════════════════════
+const MISSIONS_DEF = [
+  { id: 'm1', title: 'Iniciante', desc: 'Assista 3 anúncios hoje', goal: 3, key: 'todayWatched', reward: 1.50, icon: '🌱' },
+  { id: 'm2', title: 'Ativo', desc: 'Assista 5 anúncios hoje', goal: 5, key: 'todayWatched', reward: 3.00, icon: '🔥' },
+  { id: 'm3', title: 'Maratonista', desc: 'Assista 10 anúncios hoje', goal: 10, key: 'todayWatched', reward: 7.50, icon: '🏃' },
+  { id: 'm4', title: 'Veterano', desc: 'Acumule 20 anúncios no total', goal: 20, key: 'watchedAds', reward: 5.00, icon: '🎖️' },
+  { id: 'm5', title: 'Mestre', desc: 'Acumule 50 anúncios no total', goal: 50, key: 'watchedAds', reward: 15.00, icon: '👑' },
+];
+
+function checkMissions(u) {
+  MISSIONS_DEF.forEach(m => {
+    const prog = u[m.key] || 0;
+    if (prog >= m.goal && !(u.missions || {})[m.id]) {
+      u.missions = u.missions || {};
+      u.missions[m.id] = true;
+      u.balance += m.reward; u.totalEarned += m.reward;
+      u.history = u.history || [];
+      u.history.push({ label: '🎯 Missão: ' + m.title, amount: m.reward, date: new Date().toLocaleString('pt-BR') });
+      notify('Missão completa: ' + m.title + ' +' + fmt(m.reward), '🎯');
+    }
+  });
+}
+
+function renderMissions() {
+  const u = state.currentUser;
+  const el = document.getElementById('missions-list');
+  el.innerHTML = MISSIONS_DEF.map(m => {
+    const prog = Math.min(m.goal, u[m.key] || 0);
+    const done = (u.missions || {})[m.id];
+    const pct = (prog / m.goal) * 100;
+    return `<div class="mission-item">
+      <div class="mission-icon">${m.icon}</div>
+      <div class="mission-info">
+        <h4>${m.title} ${done ? '✅' : ''}</h4>
+        <p>${m.desc}</p>
+        <div class="mission-progress"><div class="mission-progress-bar" style="width:${pct}%"></div></div>
+        <div style="font-size:.78rem;color:var(--text3);margin-top:.25rem">${prog}/${m.goal}</div>
+      </div>
+      <div class="mission-reward">${done ? '<span class="text-green">✓ Recebido</span>' : '+' + fmt(m.reward)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+//  RANKING
+// ════════════════════════════════════════════
+function renderRanking() {
+  const fakeUsers = [
+    { name: 'Carlos M.', earned: 87.50 }, { name: 'Ana R.', earned: 74.00 },
+    { name: 'Pedro L.', earned: 62.00 }, { name: 'Fatima S.', earned: 55.50 },
+    { name: 'João A.', earned: 48.00 }, { name: 'Maria C.', earned: 41.00 },
+    { name: 'Luís F.', earned: 33.50 }, { name: 'Sofia N.', earned: 27.00 },
+  ];
+  const u = state.currentUser;
+  const allUsers = [...fakeUsers, { name: u.name + ' (Você)', earned: u.totalEarned || 0, isYou: true }];
+  allUsers.sort((a, b) => b.earned - a.earned);
+  const medals = ['🥇','🥈','🥉'];
+  const posClass = ['gold','silver','bronze'];
+  const el = document.getElementById('rank-list');
+  el.innerHTML = allUsers.slice(0, 10).map((user, i) => `
+    <div class="rank-item" ${user.isYou ? 'style="border-color:var(--accent)"' : ''}>
+      <div class="rank-pos ${posClass[i] || ''}">${medals[i] || (i+1)}</div>
+      <div class="rank-avatar">${user.name.charAt(0).toUpperCase()}</div>
+      <div class="rank-name">${user.name}</div>
+      <div class="rank-earned">${fmt(user.earned)}</div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════
+//  WALLET
+// ════════════════════════════════════════════
+function renderWallet() {
+  const u = state.currentUser;
+  document.getElementById('wallet-balance-display').textContent = fmt(u.balance);
+  document.getElementById('wallet-pending-display').textContent = fmt(u.withdrawalPending || 0) + ' pendente';
+  renderWithdrawHistory();
+}
+
+function setMethod(btn, method) {
+  document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  withdrawMethod = method;
+  const labels = { transfer: 'Número da Conta / IBAN', pix: 'Chave Pix', paypal: 'Email PayPal', mobile: 'Número de Telemóvel' };
+  document.getElementById('w-account-label').textContent = labels[method];
+  document.getElementById('bank-field').style.display = (method === 'transfer') ? 'block' : 'none';
+}
+
+function requestWithdraw() {
+  const u = state.currentUser;
+  const name = document.getElementById('w-name').value.trim();
+  const account = document.getElementById('w-account').value.trim();
+  const country = document.getElementById('w-country').value;
+  const amount = parseFloat(document.getElementById('w-amount').value);
+  if (!name || !account) { notify('Preencha todos os campos', '⚠️'); return; }
+  if (isNaN(amount) || amount < 50) { notify('Valor mínimo de saque é KZ 50,00', '⚠️'); return; }
+  if (amount > u.balance) { notify('Saldo insuficiente', '❌'); return; }
+  u.balance -= amount;
+  u.withdrawalPending = (u.withdrawalPending || 0) + amount;
+  const wd = {
+    id: Date.now(), userId: u.id, userName: u.name, userEmail: u.email,
+    name, method: withdrawMethod, account, bank: document.getElementById('w-bank')?.value || '',
+    country, amount, date: new Date().toLocaleString('pt-BR'), status: 'pending'
+  };
+  state.withdrawals.push(wd);
+  u.history = u.history || [];
+  u.history.push({ label: '💸 Saque solicitado', amount: -amount, date: wd.date });
+  syncUser(u); saveState();
+  document.getElementById('nav-balance-display').textContent = fmt(u.balance);
+  notify('Saque de ' + fmt(amount) + ' solicitado com sucesso!', '✅');
+  renderWallet();
+  document.getElementById('w-amount').value = '';
+}
+
+function renderWithdrawHistory() {
+  const u = state.currentUser;
+  const myWds = state.withdrawals.filter(w => w.userId === u.id).reverse();
+  const el = document.getElementById('withdraw-history');
+  if (!myWds.length) { el.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Nenhum saque ainda.</p></div>'; return; }
+  const statusMap = { pending: 'Pendente', analysis: 'Em Análise', paid: 'Pago', rejected: 'Rejeitado' };
+  el.innerHTML = '<table class="history-table"><thead><tr><th>Data</th><th>Método</th><th>Valor</th><th>Status</th></tr></thead><tbody>' +
+    myWds.map(w => `<tr>
+      <td style="font-size:.82rem">${w.date}</td>
+      <td>${w.method}</td>
+      <td class="text-gold">${fmt(w.amount)}</td>
+      <td><span class="status-badge ${w.status}">${statusMap[w.status]}</span></td>
+    </tr>`).join('') + '</tbody></table>';
+}
+
+// ════════════════════════════════════════════
+//  REFERRAL
+// ════════════════════════════════════════════
+function renderReferral() {
+  const u = state.currentUser;
+  document.getElementById('ref-code-display').textContent = u.refCode;
+  document.getElementById('ref-link-display').textContent = 'https://viewmoney.ao/r/' + u.refCode;
+  document.getElementById('ref-count').textContent = u.refCount || 0;
+  document.getElementById('ref-earned').textContent = fmt(u.refEarned || 0);
+}
+function copyRef() {
+  navigator.clipboard.writeText(state.currentUser.refCode).catch(() => {});
+  notify('Código copiado!', '📋');
+}
+
+// ════════════════════════════════════════════
+//  ADMIN
+// ════════════════════════════════════════════
+function switchAdminTab(tab) {
+  ['withdrawals','users','ads-admin','stats'].forEach(t => {
+    document.getElementById('admin-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('#sub-admin .auth-tab').forEach((b, i) => {
+    b.classList.toggle('active', ['withdrawals','users','ads-admin','stats'][i] === tab);
+  });
+  if (tab === 'stats') renderAdminStats();
+  if (tab === 'users') renderAdminUsers();
+  if (tab === 'ads-admin') renderAdminAds();
+  if (tab === 'withdrawals') renderAdminWithdrawals();
+}
+
+function renderAdmin() {
+  switchAdminTab('withdrawals');
+}
+
+function renderAdminWithdrawals() {
+  const pending = state.withdrawals;
+  const tbody = document.getElementById('admin-withdraw-body');
+  if (!pending.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:2rem">Nenhum saque ainda</td></tr>'; return; }
+  const statusMap = { pending: 'Pendente', analysis: 'Em Análise', paid: 'Pago', rejected: 'Rejeitado' };
+  tbody.innerHTML = pending.map((w, i) => `<tr>
+    <td>${w.userName}</td>
+    <td class="text-gold">${fmt(w.amount)}</td>
+    <td>${w.method}</td>
+    <td style="font-size:.8rem">${w.account}</td>
+    <td style="font-size:.78rem;color:var(--text3)">${w.date}</td>
+    <td><span class="status-badge ${w.status}">${statusMap[w.status]}</span></td>
+    <td><div class="actions">
+      ${w.status === 'pending' ? `<button class="btn btn-sm" style="background:rgba(124,90,240,.15);color:var(--accent2);border:1px solid var(--border)" onclick="adminWdStatus(${i},'analysis')">Análise</button>` : ''}
+      ${w.status !== 'paid' && w.status !== 'rejected' ? `<button class="btn btn-success btn-sm" onclick="adminWdStatus(${i},'paid')">Pagar</button>` : ''}
+      ${w.status !== 'rejected' && w.status !== 'paid' ? `<button class="btn btn-danger btn-sm" onclick="adminWdStatus(${i},'rejected')">Rejeitar</button>` : ''}
+    </div></td>
+  </tr>`).join('');
+}
+
+function adminWdStatus(idx, status) {
+  const wd = state.withdrawals[idx];
+  if (!wd) return;
+  const oldStatus = wd.status;
+  wd.status = status;
+  const user = state.users.find(u => u.id === wd.userId);
+  if (user) {
+    if (status === 'paid') {
+      user.withdrawalPending = Math.max(0, (user.withdrawalPending || 0) - wd.amount);
+      state.globalStats.totalPaid += wd.amount;
+    }
+    if (status === 'rejected' && oldStatus !== 'paid') {
+      user.balance += wd.amount;
+      user.withdrawalPending = Math.max(0, (user.withdrawalPending || 0) - wd.amount);
+      notify('Saque rejeitado — valor devolvido ao usuário', '↩️');
+    }
+  }
+  saveState();
+  renderAdminWithdrawals();
+  notify('Status atualizado: ' + status, '✅');
+}
+
+function renderAdminUsers() {
+  const tbody = document.getElementById('admin-users-body');
+  tbody.innerHTML = state.users.map(u => `<tr>
+    <td>${u.name}</td><td style="color:var(--text2)">${u.email}</td>
+    <td class="text-green">${fmt(u.balance)}</td><td>${u.watchedAds || 0}</td>
+    <td style="font-size:.78rem;color:var(--text3)">${new Date(u.joinDate).toLocaleDateString('pt-BR')}</td>
+    <td><span class="status-badge paid">Ativo</span></td>
+  </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:2rem">Nenhum usuário</td></tr>';
+}
+
+function renderAdminAds() {
+  document.getElementById('ads-count').textContent = state.ads.length;
+  const el = document.getElementById('admin-ads-list');
+  el.innerHTML = '<table class="admin-table"><thead><tr><th>Anúncio</th><th>Marca</th><th>Duração</th><th>Recompensa</th><th>Visualizações</th><th>Ação</th></tr></thead><tbody>' +
+    state.ads.map((ad, i) => `<tr>
+      <td>${ad.emoji} ${ad.title}</td><td>${ad.brand}</td>
+      <td>${ad.duration}s</td><td class="text-green">${fmt(ad.reward)}</td>
+      <td>${ad.views || 0}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="adminRemoveAd(${i})">Remover</button></td>
+    </tr>`).join('') + '</tbody></table>';
+}
+
+function adminAddAd() {
+  const title = document.getElementById('adm-ad-title').value.trim();
+  const brand = document.getElementById('adm-ad-brand').value.trim();
+  const emoji = document.getElementById('adm-ad-emoji').value.trim() || '📦';
+  const duration = parseInt(document.getElementById('adm-ad-duration').value) || 20;
+  const reward = parseFloat(document.getElementById('adm-ad-reward').value) || 2.50;
+  const color = document.getElementById('adm-ad-color').value;
+  if (!title || !brand) { notify('Preencha título e marca', '⚠️'); return; }
+  state.ads.push({ id: Date.now(), title, brand, emoji, duration, reward, color, views: 0 });
+  saveState();
+  renderAdminAds();
+  notify('Anúncio "' + title + '" adicionado!', '✅');
+  document.getElementById('adm-ad-title').value = '';
+  document.getElementById('adm-ad-brand').value = '';
+}
+
+function adminRemoveAd(i) {
+  state.ads.splice(i, 1);
+  saveState(); renderAdminAds();
+  notify('Anúncio removido', '🗑️');
+}
+
+function renderAdminStats() {
+  document.getElementById('adm-stat-users').textContent = state.users.length;
+  document.getElementById('adm-stat-paid').textContent = fmt(state.globalStats.totalPaid);
+  document.getElementById('adm-stat-views').textContent = state.globalStats.totalViews;
+  document.getElementById('adm-stat-pend').textContent = state.withdrawals.filter(w => w.status === 'pending').length;
+}
+
+// ════════════════════════════════════════════
+//  DAILY BONUS
+// ════════════════════════════════════════════
+function checkDailyBonus() {
+  const u = state.currentUser;
+  if (!u || u.isAdmin) return;
+  const today = new Date().toDateString();
+  if (u.dailyBonus === today) return;
+  u.streak = (u.streak || 0) + 1;
+  const bonus = Math.min(5, 1 + (u.streak - 1) * 0.5);
+  document.getElementById('bonus-amount-display').textContent = fmt(bonus);
+  document.getElementById('bonus-streak-text').textContent = 'Streak: ' + u.streak + ' dia(s) consecutivo(s)';
+  document.getElementById('bonus-modal').classList.add('open');
+}
+
+function claimBonus() {
+  const u = state.currentUser;
+  const today = new Date().toDateString();
+  const bonus = Math.min(5, 1 + (u.streak - 1) * 0.5);
+  u.dailyBonus = today;
+  u.balance += bonus; u.totalEarned += bonus;
+  u.history = u.history || [];
+  u.history.push({ label: '🎁 Bônus diário (streak ' + u.streak + 'd)', amount: bonus, date: new Date().toLocaleString('pt-BR') });
+  syncUser(u); saveState();
+  document.getElementById('bonus-modal').classList.remove('open');
+  document.getElementById('nav-balance-display').textContent = fmt(u.balance);
+  notify('Bônus de ' + fmt(bonus) + ' adicionado! 🎁', '🎉');
+  renderOverview();
+}
+
+// ════════════════════════════════════════════
+//  NOTIFICATIONS
+// ════════════════════════════════════════════
+function notify(text, icon = 'ℹ️') {
+  const wrap = document.getElementById('notif-wrapper');
+  const el = document.createElement('div');
+  el.className = 'notif';
+  el.innerHTML = `<span class="notif-icon">${icon}</span><span class="notif-text">${text}</span><button class="notif-close" onclick="this.parentElement.remove()">✕</button>`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 300); }, 4000);
+}
+
+function fakeNotifications() {
+  const msgs = [
+    ['Carlos acabou de ganhar KZ 3,50 🎉','💸'],['Ana completou 10 anúncios hoje!','🏆'],
+    ['Novo anúncio disponível!','📺'],['Pedro subiu para Nível Prata! 🥈','⬆️'],
+    ['João sacou KZ 120,00 com sucesso','✅']
+  ];
+  let i = 0;
+  const fn = () => { if (i < msgs.length) { notify(msgs[i][0], msgs[i][1]); i++; setTimeout(fn, 8000); } };
+  setTimeout(fn, 5000);
+}
+
+// ════════════════════════════════════════════
+//  CHAT SUPPORT
+// ════════════════════════════════════════════
+function toggleChat() { document.getElementById('chat-window').classList.toggle('open'); }
+
+function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+  inp.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    const replies = [
+      'Olá! Verificaremos sua solicitação em breve. ⏳',
+      'O prazo de saque é de 1 a 3 dias úteis. 📅',
+      'Seu saldo é atualizado em tempo real após cada anúncio. ✅',
+      'Para dúvidas, envie um email para suporte@viewmoney.ao 📧',
+      'Obrigado por usar a ViewMoney! 💜'
+    ];
+    const rep = replies[Math.floor(Math.random() * replies.length)];
+    msgs.innerHTML += `<div class="chat-msg">${rep}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200);
+}
+
+// ════════════════════════════════════════════
+//  HOME STATS ANIMATION
+// ════════════════════════════════════════════
+function animateHomeStats() {
+  animateCount('stat-online', 0, 1247, 2000, v => v.toLocaleString('pt-BR'));
+  animateCount('stat-paid', 0, 12450, 2500, v => 'KZ ' + v.toLocaleString('pt-BR'));
+  animateCount('stat-ads', 0, state.ads.length || 8, 1500, v => v);
+}
+
+function animateCount(id, from, to, dur, format) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = performance.now();
+  const step = (t) => {
+    const prog = Math.min((t - start) / dur, 1);
+    const val = Math.floor(from + (to - from) * easeOut(prog));
+    el.textContent = format(val);
+    if (prog < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+function fmt(n) {
+  return 'KZ ' + (Number(n) || 0).toFixed(2).replace('.', ',');
+}
+
+// ════════════════════════════════════════════
+//  START
+// ════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
